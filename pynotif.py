@@ -65,7 +65,20 @@ def displayNotify(title, text, timeout, type):
             timeout = int(ekg.config["notify:catch_url_time"])
     n = pynotify.Notification(title, text, type)
     n.set_timeout(timeout)
-    n.show()
+
+    # Most probably glib.GError is:
+    # The name org.freedesktop.Notifications was not provided by any
+    # .service files
+    # Catch this exception and print information in debug window.
+    # Sometimes I
+    # do not have org.freedesktop.Notifications registered and
+    # I do not want
+    # error messages in chat window.
+    try:
+        n.show()
+    except glib.GError as e:
+        ekg.debug("pynotif: " + str(e))
+
     return 1
 
 def notifyStatus(session, uid, status, descr):
