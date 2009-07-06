@@ -1,0 +1,30 @@
+1. About
+
+   pynotif is an extension for ekg2. It sends dbus notifications about status
+   changes and incoming messages. You will also need some sort of notification
+   daemon that will recive and display notifications as pop-up windows. If you
+   use a complex desktop environment like KDE or GNOME, most probrably you
+   have notification running.
+
+2. Prerequirements
+
+   * ekg2 + plugin python
+   * pynotify python library
+   * notification daemon
+
+3. How to use it
+
+   Just copy pynotif.py to your .ekg2/scripts directory and load it using:
+   /script:load pynotif
+
+   If you want copy it to .ekg2/scripts/autorun, it will be loaded
+   automatically at ekg2 startup.
+
+4. Author
+
+   Paweł Tomak <satherot (at) gmail (dot) com>
+
+5. Copying
+
+   You are free to use it, redistribute, modify, distribute modified version
+   according to GPL version 3 or any later.
