@@ -91,7 +91,7 @@ def notifyStatus(session, uid, status, descr):
     regexp = re.compile('.*' + session + '.*')
     regexp = regexp.findall(uid)
     if len(regexp):
-        ekg.echo("Zmienil sie status sesji: %s. Nie zostal on zmieniony przez ten program. Sprawdz to, jesli nie zmieniales statusu jakims innym programem" % session)
+        ekg.debug("Zmienil sie status sesji: %s. Nie zostal on zmieniony przez ten program. Sprawdz to, jesli nie zmieniales statusu jakims innym programem" % session)
         return 1
     sesja = ekg.session_get(session)
     regexp = re.compile('([a-z]{2,4}:[^/]+)')
@@ -100,10 +100,13 @@ def notifyStatus(session, uid, status, descr):
     try:
         user = sesja.user_get(regexp)
     except KeyError:
-        ekg.echo("Nie znalazlem uzytkownika %s." % uid)
-        return 1
+        ekg.debug("Nie znalazlem uzytkownika %s." % uid)
+        user = "Empty"
     status = transStatus(status)
-    nick = user.nickname or user.uid or "Empty"
+    if user == "Empty":
+        nick = regexp
+    else:
+        nick = user.nickname or user.uid or "Empty"
     s = status or "Empty"
     s = removeHTML(s)
     text = "<b>" + nick + "</b> zmienil status na <b>" + s + "</b>"
@@ -124,10 +127,16 @@ def notifyMessage(session, uid, type, text, stime, ignore_level):
     try:
         user = sesja.user_get(uid)
     except KeyError:
-        ekg.echo("Nie znalazlem uzytkownika %s." % uid)
-        return 1
+        ekg.debug("Nie znalazlem uzytkownika %s." % uid)
+        user = "Empty"
     t = time.strftime("%H:%M:%S", time.gmtime(stime))
-    title = t + " " + user.nickname
+    if user == "Empty" and ekg.config["notify:message_notify_unknown"] != "0":
+        return 1
+    if user == "Empty":
+        user = uid
+    else:
+        use = user.nickname
+    title = t + " " + user
     if len(text) > 200:
         text = text[0:199] + "... >>>\n\n"
     return displayNotify(title, text, TIMEOUT_MSG, ekg.config["notify:icon_msg"])
@@ -161,6 +170,7 @@ ekg.variable_add("notify:icon_status", "dialog-warning")
 ekg.variable_add("notify:icon_msg", "dialog-warning")
 ekg.variable_add("notify:message_timeout", "3500", timeCheck)
 ekg.variable_add("notify:message_notify", "1")
+ekg.variable_add("notify:message_notify_unknown", "1")
 ekg.variable_add("notify:status_timeout", "3500", timeCheck)
 ekg.variable_add("notify:status_notify", "1")
 ekg.variable_add("notify:catch_url", "1")
