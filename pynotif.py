@@ -62,7 +62,7 @@ def displayNotify(title, text, timeout, type):
         l = catchURL(text)
         if l[0]:
             text = l[1]
-            timeout = int(ekg.config["notify:catch_url_time"])
+            timeout = int(ekg.config["notify:catch_url_timeout"])
     n = pynotify.Notification(title, text, type)
     n.set_timeout(timeout)
     n.show()
