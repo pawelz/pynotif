@@ -17,8 +17,8 @@
    Just copy pynotif.py to your .ekg2/scripts directory and load it using:
    /script:load pynotif
 
-   If you want copy it to .ekg2/scripts/autorun, it will be loaded
-   automatically at ekg2 startup.
+   If you copy it to .ekg2/scripts/autorun, it will be loaded automatically at
+   ekg2 startup.
 
 4. Author
 
