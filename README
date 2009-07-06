@@ -6,7 +6,7 @@
    use a complex desktop environment like KDE or GNOME, most probrably you
    have notification running.
 
-2. Prerequirements
+2. Dependencies
 
    * ekg2 + plugin python
    * pynotify python library
