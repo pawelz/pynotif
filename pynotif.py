@@ -69,6 +69,8 @@ def displayNotify(title, text, timeout, type):
     return 1
 
 def notifyStatus(session, uid, status, descr):
+    if ekg.config["notify:status_notify"] == "0":
+        return 1
     regexp = re.compile('irc:*')
     regexp = regexp.findall(session)
     if len(regexp):
@@ -98,6 +100,8 @@ def notifyStatus(session, uid, status, descr):
     return displayNotify(session, text, TIMEOUT_STATUS, ekg.config["notify:icon_status"])
 
 def notifyMessage(session, uid, type, text, stime, ignore_level):
+    if ekg.config["notify:message_notify"] == "0":
+        return 1
     regexp = re.compile('irc:*')
     regexp = regexp.findall(session)
     if len(regexp):
@@ -143,7 +147,9 @@ ekg.handler_bind("protocol-message-received", notifyMessage)
 ekg.variable_add("notify:icon_status", "dialog-warning")
 ekg.variable_add("notify:icon_msg", "dialog-warning")
 ekg.variable_add("notify:message_timeout", "3500", timeCheck)
+ekg.variable_add("notify:message_notify", "1")
 ekg.variable_add("notify:status_timeout", "3500", timeCheck)
+ekg.variable_add("notify:status_notify", "1")
 ekg.variable_add("notify:catch_url", "1")
 ekg.variable_add("notify:catch_url_timeout", "5000", timeCheck)
 
