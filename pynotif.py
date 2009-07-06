@@ -33,6 +33,14 @@ def removeHTML(text):
     text = reg.sub("&#62;", text)
     return text
 
+def catchURL(text):
+    reg = re.compile("(http://[^ ]+|www.[^ ]+)")
+    if len(reg.findall(text)):
+        text = reg.sub(r'<a href="\1">\1</a>', text)
+        return [1, text]
+    else:
+        return [0, text]
+
 def transStatus(status):
     return {
             'avail': 'dostepny',
@@ -50,6 +58,11 @@ def displayNotify(title, text, timeout, type):
     if not pynotify.init("EkgNotif"):
         ekg.echo("you don't seem to have pynotify installed")
         return 0
+    if ekg.config["notify:catch_url"] != "0":
+        l = catchURL(text)
+        if l[0]:
+            text = l[1]
+            timeout = int(ekg.config["notify:catch_url_time"])
     n = pynotify.Notification(title, text, type)
     n.set_timeout(timeout)
     n.show()
@@ -114,10 +127,14 @@ def timeCheck(name, args):
         if name == "notify:status_timeout":
             TIMEOUT_STATUS = int(rexp[0])
             return 1
+        if name == "notify:catch_url_timeout":
+            return 1
 
     if name == "notify:message_timeout":
         ekg.echo("Zmienna %s bedzie pomijana do czasu, az zostanie ustawiona wartosc z zakresu od 1000ms do 9999ms. Jej obecna wartosc to: %i" % (name,TIMEOUT_MSG))
     elif name == "notify:status_timeout":
+        ekg.echo("Zmienna %s bedzie pomijana do czasu, az zostanie ustawiona wartosc z zakresu od 1000ms do 9999ms. Jej obecna wartosc to: %i" % (name,TIMEOUT_STATUS))
+    elif name == "notify:catch_url_timeout":
         ekg.echo("Zmienna %s bedzie pomijana do czasu, az zostanie ustawiona wartosc z zakresu od 1000ms do 9999ms. Jej obecna wartosc to: %i" % (name,TIMEOUT_STATUS))
     return 0
 
@@ -127,6 +144,8 @@ ekg.variable_add("notify:icon_status", "dialog-warning")
 ekg.variable_add("notify:icon_msg", "dialog-warning")
 ekg.variable_add("notify:message_timeout", "3500", timeCheck)
 ekg.variable_add("notify:status_timeout", "3500", timeCheck)
+ekg.variable_add("notify:catch_url", "1")
+ekg.variable_add("notify:catch_url_timeout", "5000", timeCheck)
 
 if int(ekg.config["notify:message_timeout"]) < 1000 or int(ekg.config["notify:message_timeout"]) > 9999:
     timeCheck("notify:message_timeout", ekg.config["notify:message_timeout"])
