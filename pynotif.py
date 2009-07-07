@@ -21,6 +21,7 @@ import time
 import pynotify
 import re
 import sys
+import glib
 
 TIMEOUT_STATUS=3500
 TIMEOUT_MSG=3500
@@ -77,6 +78,7 @@ def displayNotify(title, text, timeout, type):
     # do not have org.freedesktop.Notifications registered and
     # I do not want
     # error messages in chat window.
+    # Or logs buffer has overflowed ;/
     try:
         n.show()
     except glib.GError as e:
