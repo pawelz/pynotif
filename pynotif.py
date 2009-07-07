@@ -34,7 +34,7 @@ def removeHTML(text):
     return text
 
 def catchURL(text):
-    reg = re.compile("(http://[^ ]+|www.[^ ]+)")
+    reg = re.compile("((news|telnet|nttp|file|http|ftp|https)://[^ ]+|www.[^ ]+)")
     if len(reg.findall(text)):
         text = reg.sub(r'<a href="\1">\1</a>', text)
         return [1, text]
