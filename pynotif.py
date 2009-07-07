@@ -183,5 +183,3 @@ if int(ekg.config["notify:message_timeout"]) < 1000 or int(ekg.config["notify:me
 if int(ekg.config["notify:status_timeout"]) < 1000 or int(ekg.config["notify:status_timeout"]) > 9999:
     timeCheck("notify:status_timeout", ekg.config["notify:status_timeout"])
 
-if 0:
-    echo "a"
