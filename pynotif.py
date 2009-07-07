@@ -136,7 +136,7 @@ def notifyMessage(session, uid, type, text, stime, ignore_level):
         user = uid
     else:
         use = user.nickname
-    title = t + " " + user
+    title = t + " " + str(user)
     if len(text) > 200:
         text = text[0:199] + "... >>>\n\n"
     return displayNotify(title, text, TIMEOUT_MSG, ekg.config["notify:icon_msg"])
