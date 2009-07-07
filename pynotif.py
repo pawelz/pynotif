@@ -27,6 +27,8 @@ TIMEOUT_MSG=3500
 def removeHTML(text):
     reg = re.compile("&")
     text = reg.sub("&#38;", text)
+    reg = re.compile('"')
+    text = reg.sub("&#34;", text)
     reg = re.compile("<")
     text = reg.sub("&#60;", text)
     reg = re.compile(">")
