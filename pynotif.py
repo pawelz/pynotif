@@ -135,7 +135,7 @@ def notifyMessage(session, uid, type, text, stime, ignore_level):
     if user == "Empty":
         user = uid
     else:
-        use = user.nickname
+        user = user.nickname
     title = t + " " + user
     if len(text) > 200:
         text = text[0:199] + "... >>>\n\n"
