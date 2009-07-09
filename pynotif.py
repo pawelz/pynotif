@@ -56,6 +56,7 @@ def transStatus(status):
             'dnd': 'nie przeszkadzac',
             'xa': 'bardzo zajety',
             'notavail': 'niedostepny',
+            'unknown': 'nieznany',
             }[status]
 
 def displayNotify(title, text, timeout, type):
