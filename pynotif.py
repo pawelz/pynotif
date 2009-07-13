@@ -90,13 +90,11 @@ def displayNotify(title, text, timeout, type):
 def notifyStatus(session, uid, status, descr):
     if ekg.config["notify:status_notify"] == "0":
         return 1
-    regexp = re.compile('irc:*')
-    regexp = regexp.findall(session)
-    if len(regexp):
+    regexp = re.compile('^irc:')
+    if regexp.match(session):
         return 1
     regexp = re.compile('.*' + session + '.*')
-    regexp = regexp.findall(uid)
-    if len(regexp):
+    if regexp.match(uid):
         ekg.debug("Zmienil sie status sesji: %s. Nie zostal on zmieniony przez ten program. Sprawdz to, jesli nie zmieniales statusu jakims innym programem" % session)
         return 1
     sesja = ekg.session_get(session)
@@ -124,9 +122,8 @@ def notifyStatus(session, uid, status, descr):
 def notifyMessage(session, uid, type, text, stime, ignore_level):
     if ekg.config["notify:message_notify"] == "0":
         return 1
-    regexp = re.compile('irc:*')
-    regexp = regexp.findall(session)
-    if len(regexp):
+    regexp = re.compile('^irc:')
+    if regexp.match(session):
         return 1
     text = removeHTML(text)
     sesja = ekg.session_get(session)
