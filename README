@@ -20,9 +20,10 @@
    If you copy it to .ekg2/scripts/autorun, it will be loaded automatically at
    ekg2 startup.
 
-4. Author
+4. Authors
 
    Paweł Tomak <satherot (at) gmail (dot) com>
+   Paweł Zuzelski <pawelz (at) pld-linux (dot) org>
 
 5. Copying
 
