@@ -167,6 +167,20 @@ def timeCheck(name, args):
         ekg.echo("Zmienna %s bedzie pomijana do czasu, az zostanie ustawiona wartosc z zakresu od 1000ms do 9999ms. Jej obecna wartosc to: %i" % (name,TIMEOUT_STATUS))
     return 0
 
+def notifyTest(name, args):
+    args = args.split(None, 1)
+    if (len(args) == 0):
+        title="Test"
+    else:
+        title=args[0]
+  
+    if (len(args) <= 1):
+        text="Pięćdziesiąt trzy"
+    else:
+        text = args[1]
+  
+    return displayNotify(title, text, TIMEOUT_MSG, ekg.config["notify:icon_msg"])
+
 ekg.handler_bind('protocol-status', notifyStatus)
 ekg.handler_bind("protocol-message-received", notifyMessage)
 ekg.variable_add("notify:icon_status", "dialog-warning")
@@ -178,6 +192,7 @@ ekg.variable_add("notify:status_timeout", "3500", timeCheck)
 ekg.variable_add("notify:status_notify", "1")
 ekg.variable_add("notify:catch_url", "1")
 ekg.variable_add("notify:catch_url_timeout", "5000", timeCheck)
+ekg.command_bind("notify:send", notifyTest)
 
 if int(ekg.config["notify:message_timeout"]) < 1000 or int(ekg.config["notify:message_timeout"]) > 9999:
     timeCheck("notify:message_timeout", ekg.config["notify:message_timeout"])
