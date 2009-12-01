@@ -35,6 +35,10 @@ def removeHTML(text):
     text = reg.sub("&#60;", text)
     reg = re.compile(">")
     text = reg.sub("&#62;", text)
+    reg = re.compile("\[[0-9]+;[0-9]+m")
+    text = reg.sub("", text)
+    reg = re.compile("\[[0-9]+m")
+    text = reg.sub("", text)
     return text
 
 def catchURL(text):
