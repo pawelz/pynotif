@@ -136,6 +136,8 @@ def notifyMessage(session, uid, type, text, stime, ignore_level):
     except KeyError:
         ekg.debug("Nie znalazlem uzytkownika %s." % uid)
         user = "Empty"
+    if not user:
+        user = "Empty"
     t = time.strftime("%H:%M:%S", time.gmtime(stime))
     if user == "Empty" and ekg.config["notify:message_notify_unknown"] == "0":
         return 1
@@ -143,7 +145,10 @@ def notifyMessage(session, uid, type, text, stime, ignore_level):
         user = uid
     else:
         user = user.nickname
-    title = t + " " + user
+    try:
+        title = t + " " + user
+    except KeyError:
+        title = t + " " + uid
     if len(text) > 200:
         text = text[0:199] + "... >>>\n\n"
     return displayNotify(title, text, TIMEOUT_MSG, ekg.config["notify:icon_msg"])
