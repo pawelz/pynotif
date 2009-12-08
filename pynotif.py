@@ -26,7 +26,8 @@ import glib
 TIMEOUT_STATUS=3500
 TIMEOUT_MSG=3500
 
-def removeHTML(text):
+def removeTextFormatting(text):
+    # Remove html tags
     reg = re.compile("&")
     text = reg.sub("&#38;", text)
     reg = re.compile('"')
@@ -35,6 +36,7 @@ def removeHTML(text):
     text = reg.sub("&#60;", text)
     reg = re.compile(">")
     text = reg.sub("&#62;", text)
+    # Remove terminal color codes
     reg = re.compile("\[[0-9]+;[0-9]+m")
     text = reg.sub("", text)
     reg = re.compile("\[[0-9]+m")
@@ -119,10 +121,10 @@ def notifyStatus(session, uid, status, descr):
     else:
         nick = user.nickname or user.uid or "Empty"
     s = status or "Empty"
-    s = removeHTML(s)
+    s = removeTextFormatting(s)
     text = "<b>" + nick + "</b> zmienil status na <b>" + s + "</b>"
     if descr:
-        descr = removeHTML(descr)
+        descr = removeTextFormatting(descr)
         text = text + ":\n" + descr + "\n"
     return displayNotify(session, text, TIMEOUT_STATUS, ekg.config["notify:icon_status"])
 
@@ -135,7 +137,7 @@ def notifyMessage(session, uid, type, text, stime, ignore_level):
     regexp = re.compile(ekg.config["notify:ignore_uids_regexp"])
     if regexp.match(uid):
         return 1
-    text = removeHTML(text)
+    text = removeTextFormatting(text)
     sesja = ekg.session_get(session)
     try:
         user = sesja.user_get(uid)
