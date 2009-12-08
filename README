@@ -20,12 +20,41 @@
    If you copy it to .ekg2/scripts/autorun, it will be loaded automatically at
    ekg2 startup.
 
-4. Authors
+4. Configuration
+
+   pynotif declares and uses following variables:
+
+   * notify:catch_url = "0"
+     - if set to "1", pynotif will replace urls with html "a href" clickable
+       tags. You may want it if your notification daemon supports basic HTML.
+
+   * notify:catch_url_timeout = "5000"
+   * notify:icon_msg = "dialog-warning"
+   * notify:icon_status = "dialog-warning"
+   * notify:ignore_sessions_regexp = "^irc:"
+     - ignore notifications from matching sessions.
+
+   * notify:ignore_uids_regexp = "^xmpp:.*@conference."
+     - ignore notifications from matching uids. Note that conference.DOMAIN is
+       default JID of MUC service, so default value of this variable causes
+       pynotif to drop notifications from MUC chatrooms.
+
+   * notify:message_notify = "1"
+     - set "0" to disable message notifications.
+
+   * notify:message_notify_unknown = "1"
+   * notify:message_timeout = "3500"
+   * notify:status_notify = "0"
+     - set "1" to enable status change notifications.
+
+   * notify:status_timeout = "3500"
+
+5. Authors
 
    Paweł Tomak <satherot (at) gmail (dot) com>
    Paweł Zuzelski <pawelz (at) pld-linux (dot) org>
 
-5. Copying
+6. Copying
 
    You are free to use it, redistribute, modify, distribute modified version
    according to GPL version 3 or any later.
