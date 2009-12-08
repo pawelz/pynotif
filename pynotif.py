@@ -96,12 +96,14 @@ def displayNotify(title, text, timeout, type):
 def notifyStatus(session, uid, status, descr):
     if ekg.config["notify:status_notify"] == "0":
         return 1
-    regexp = re.compile(ekg.config["notify:ignore_sessions_regexp"])
-    if regexp.match(session):
-        return 1
-    regexp = re.compile(ekg.config["notify:ignore_uids_regexp"])
-    if regexp.match(uid):
-        return 1
+    if (ekg.config["notify:ignore_sessions_regexp"]):
+      regexp = re.compile(ekg.config["notify:ignore_sessions_regexp"])
+      if regexp.match(session):
+          return 1
+    if (ekg.config["notify:ignore_uids_regexp"]):
+      regexp = re.compile(ekg.config["notify:ignore_uids_regexp"])
+      if regexp.match(uid):
+          return 1
     regexp = re.compile('.*' + session + '.*')
     if regexp.match(uid):
         ekg.debug("Zmienil sie status sesji: %s. Nie zostal on zmieniony przez ten program. Sprawdz to, jesli nie zmieniales statusu jakims innym programem" % session)
@@ -131,12 +133,14 @@ def notifyStatus(session, uid, status, descr):
 def notifyMessage(session, uid, type, text, stime, ignore_level):
     if ekg.config["notify:message_notify"] == "0":
         return 1
-    regexp = re.compile(ekg.config["notify:ignore_sessions_regexp"])
-    if regexp.match(session):
-        return 1
-    regexp = re.compile(ekg.config["notify:ignore_uids_regexp"])
-    if regexp.match(uid):
-        return 1
+    if (ekg.config["notify:ignore_sessions_regexp"]):
+      regexp = re.compile(ekg.config["notify:ignore_sessions_regexp"])
+      if regexp.match(session):
+          return 1
+    if (ekg.config["notify:ignore_uids_regexp"]):
+      regexp = re.compile(ekg.config["notify:ignore_uids_regexp"])
+      if regexp.match(uid):
+          return 1
     text = removeTextFormatting(text)
     sesja = ekg.session_get(session)
     try:
