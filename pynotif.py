@@ -94,8 +94,11 @@ def displayNotify(title, text, timeout, type):
 def notifyStatus(session, uid, status, descr):
     if ekg.config["notify:status_notify"] == "0":
         return 1
-    regexp = re.compile('^irc:')
+    regexp = re.compile(ekg.config["notify:ignore_sessions_regexp"])
     if regexp.match(session):
+        return 1
+    regexp = re.compile(ekg.config["notify:ignore_uids_regexp"])
+    if regexp.match(uid):
         return 1
     regexp = re.compile('.*' + session + '.*')
     if regexp.match(uid):
@@ -126,8 +129,11 @@ def notifyStatus(session, uid, status, descr):
 def notifyMessage(session, uid, type, text, stime, ignore_level):
     if ekg.config["notify:message_notify"] == "0":
         return 1
-    regexp = re.compile('^irc:')
+    regexp = re.compile(ekg.config["notify:ignore_sessions_regexp"])
     if regexp.match(session):
+        return 1
+    regexp = re.compile(ekg.config["notify:ignore_uids_regexp"])
+    if regexp.match(uid):
         return 1
     text = removeHTML(text)
     sesja = ekg.session_get(session)
@@ -192,6 +198,8 @@ def notifyTest(name, args):
 
 ekg.handler_bind('protocol-status', notifyStatus)
 ekg.handler_bind("protocol-message-received", notifyMessage)
+ekg.variable_add("notify:ignore_sessions_regexp", "^irc:")
+ekg.variable_add("notify:ignore_uids_regexp", "^xmpp:.*@conference\.")
 ekg.variable_add("notify:icon_status", "dialog-warning")
 ekg.variable_add("notify:icon_msg", "dialog-warning")
 ekg.variable_add("notify:message_timeout", "3500", timeCheck)
