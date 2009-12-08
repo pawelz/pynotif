@@ -27,6 +27,12 @@ TIMEOUT_STATUS=3500
 TIMEOUT_MSG=3500
 
 def removeTextFormatting(text):
+    """
+    Removes advance text formatting from notifications.
+
+    Converts html reserved characters (&, ", < and >) to xml entities.
+    Removes ANSII color strings.
+    """
     # Remove html tags
     reg = re.compile("&")
     text = reg.sub("&#38;", text)
@@ -44,6 +50,10 @@ def removeTextFormatting(text):
     return text
 
 def catchURL(text):
+    """
+    Converts URLs to html "a href" tags, so they will be clickable if
+    notification daemon supports basic html.
+    """
     reg = re.compile("((news|telnet|nttp|file|http|ftp|https)://[^ ]+|www.[^ ]+)")
     if len(reg.findall(text)):
         text = reg.sub(r'<a href="\1">\1</a>', text)
@@ -66,6 +76,10 @@ def transStatus(status):
             }[status]
 
 def displayNotify(title, text, timeout, type):
+    """
+    Sends notification to dbus org.freedesktop.Notifications service using
+    pynotify python library.
+    """
     if not pynotify.init("EkgNotif"):
         ekg.echo("you don't seem to have pynotify installed")
         return 0
@@ -94,6 +108,13 @@ def displayNotify(title, text, timeout, type):
     return 1
 
 def notifyStatus(session, uid, status, descr):
+    """
+    Display status change notifications, but first check if status change
+    notifications are enabled, then check if session and uids match
+    ignore_{sessions,uids}_regexp.
+
+    This function is bound to protocol-status handler
+    """
     if ekg.config["notify:status_notify"] == "0":
         return 1
     if (ekg.config["notify:ignore_sessions_regexp"]):
@@ -131,6 +152,13 @@ def notifyStatus(session, uid, status, descr):
     return displayNotify(session, text, TIMEOUT_STATUS, ekg.config["notify:icon_status"])
 
 def notifyMessage(session, uid, type, text, stime, ignore_level):
+    """
+    Display message notifications, but first check if message notifications
+    are enabled, then check if session and uids match
+    ignore_{sessions,uids}_regexp.
+
+    This function is bound to protocol-message handler
+    """
     if ekg.config["notify:message_notify"] == "0":
         return 1
     if (ekg.config["notify:ignore_sessions_regexp"]):
@@ -189,6 +217,11 @@ def timeCheck(name, args):
     return 0
 
 def notifyTest(name, args):
+    """
+    Sends test notification.
+
+    This function is bound to notify:send command
+    """
     args = args.split(None, 1)
     if (len(args) == 0):
         title="Test"
