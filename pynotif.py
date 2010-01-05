@@ -49,15 +49,15 @@ def removeTextFormatting(text):
     text = reg.sub("", text)
     return text
 
-def parseMeCommand(text, uid):
+def parseMeCommand(text, user):
     """
     Interpretes /me command as defined in JEP-0245
 
-    If text begins with '/me ', substitute it with '* uid '
+    If text begins with '/me ', substitute it with '* user '
     """
 
     if (text[:4] == "/me "):
-        text = "* " + uid + text[3:]
+        text = "* " + user + text[3:]
 
     return text
 
@@ -181,8 +181,6 @@ def notifyMessage(session, uid, type, text, stime, ignore_level):
       regexp = re.compile(ekg.config["notify:ignore_uids_regexp"])
       if regexp.match(uid):
           return 1
-    text = removeTextFormatting(text)
-    text = parseMeCommand(text, uid)
     sesja = ekg.session_get(session)
     try:
         user = sesja.user_get(uid)
@@ -202,6 +200,8 @@ def notifyMessage(session, uid, type, text, stime, ignore_level):
         title = t + " " + user
     except KeyError:
         title = t + " " + uid
+    text = removeTextFormatting(text)
+    text = parseMeCommand(text, user)
     if len(text) > 200:
         text = text[0:199] + "... >>>\n\n"
     return displayNotify(title, text, TIMEOUT_MSG, ekg.config["notify:icon_msg"])
