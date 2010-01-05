@@ -49,6 +49,18 @@ def removeTextFormatting(text):
     text = reg.sub("", text)
     return text
 
+def parseMeCommand(text, uid):
+    """
+    Interpretes /me command as defined in JEP-0245
+
+    If text begins with '/me ', substitute it with '* uid '
+    """
+
+    if (text[:4] == "/me "):
+        text = "* " + uid + text[3:]
+
+    return text
+
 def catchURL(text):
     """
     Converts URLs to html "a href" tags, so they will be clickable if
@@ -170,6 +182,7 @@ def notifyMessage(session, uid, type, text, stime, ignore_level):
       if regexp.match(uid):
           return 1
     text = removeTextFormatting(text)
+    text = parseMeCommand(text, uid)
     sesja = ekg.session_get(session)
     try:
         user = sesja.user_get(uid)
