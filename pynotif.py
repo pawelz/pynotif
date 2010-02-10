@@ -102,6 +102,7 @@ def displayNotify(title, text, timeout, type):
             timeout = int(ekg.config["notify:catch_url_timeout"])
     n = pynotify.Notification(title, text, type)
     n.set_timeout(timeout)
+    n.set_urgency(pynotify.URGENCY_LOW)
 
     # Most probably glib.GError is:
     # The name org.freedesktop.Notifications was not provided by any
