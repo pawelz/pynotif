@@ -102,8 +102,6 @@ def getUrgency(title, text):
     at least single "&" character.
     """
     
-    urgencyNormal = re.compile(ekg.config["notify:urgency_normal_regexp"])
-    
     message=title+"&"+text
     
     urgencyCritical = re.compile(ekg.config["notify:urgency_critical_regexp"])
