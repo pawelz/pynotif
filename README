@@ -51,6 +51,16 @@
      - set "1" to enable status change notifications.
 
    * notify:status_timeout = "3500"
+   * notify:urgency_critical_regexp = "^$"
+   * notify:urgency_normal_regexp = "^$"
+     - before sending notification, pynotif mathes title&message against these
+       regexp. If "critical_regexp" mathes, urgency is set to CRITICAL.
+       Otherwise, if "normaln_regexp" mathes, urgency is set to NORMAL.
+       Otherwise notification is send as LOW.
+       Note '&' was chosen as separator, as this character is forbiden in
+       JIDs, so it should not appear in notification title. Default values of
+       these regexps is "^$". Note that these regexps are never matched,
+       because string contain at least single "&" character.
 
 5. Authors
 

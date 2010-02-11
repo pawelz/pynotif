@@ -87,6 +87,35 @@ def transStatus(status):
             'unknown': 'nieznany',
             }[status]
 
+def getUrgency(title, text):
+    """
+    Performs notify:urgency_critical_regexp and notify:urgency_normal_regexp
+    matching on "title&text". "&" character was chosen as separator, because
+    acording to RFC3920, Apendix A, use of this character is forbiden i JID,
+    so it should not apear in title.
+
+    If notify:urgency_critical_regexp matches, returns urgency CRITICAL. If
+    not, tries to match notify:urgency_normal_regexp, on success return
+    urgency NORMAL. Finally return urgency LOW.
+
+    Default values are "^$" wich are never matched, as string always contain
+    at least single "&" character.
+    """
+    
+    urgencyNormal = re.compile(ekg.config["notify:urgency_normal_regexp"])
+    
+    message=title+"&"+text
+    
+    urgencyCritical = re.compile(ekg.config["notify:urgency_critical_regexp"])
+    if (urgencyCritical.match(message)):
+        return pynotify.URGENCY_CRITICAL
+    
+    urgencyNormal = re.compile(ekg.config["notify:urgency_normal_regexp"])
+    if (urgencyNormal.match(message)):
+        return pynotify.URGENCY_NORMAL
+    
+    return pynotify.URGENCY_LOW
+
 def displayNotify(title, text, timeout, type):
     """
     Sends notification to dbus org.freedesktop.Notifications service using
@@ -101,8 +130,9 @@ def displayNotify(title, text, timeout, type):
             text = l[1]
             timeout = int(ekg.config["notify:catch_url_timeout"])
     n = pynotify.Notification(title, text, type)
+
     n.set_timeout(timeout)
-    n.set_urgency(pynotify.URGENCY_LOW)
+    n.set_urgency(getUrgency(title, text))
 
     # Most probably glib.GError is:
     # The name org.freedesktop.Notifications was not provided by any
@@ -254,6 +284,8 @@ ekg.handler_bind('protocol-status', notifyStatus)
 ekg.handler_bind("protocol-message-received", notifyMessage)
 ekg.variable_add("notify:ignore_sessions_regexp", "^irc:")
 ekg.variable_add("notify:ignore_uids_regexp", "^xmpp:.*@conference\.")
+ekg.variable_add("notify:urgency_critical_regexp", "^$")
+ekg.variable_add("notify:urgency_normal_regexp", "^$")
 ekg.variable_add("notify:icon_status", "dialog-warning")
 ekg.variable_add("notify:icon_msg", "dialog-warning")
 ekg.variable_add("notify:message_timeout", "3500", timeCheck)
