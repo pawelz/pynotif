@@ -1,0 +1,13 @@
+* Mamy kilka zmiennych konfiguracyjnych, które przechowują regexpy
+  dopasowywane do nazw użytkowników, treści wiadomości itp. Przydałoby się
+  zunifikować używcie tych zmiennych:
+  - napisać jedną funkcję do dopasowywania regexpów
+  - wymyślić jak wyłączyć uzycie regexpu. Obecnie aby wyłączyć regexp
+    ustawiamy go na wartość która nigdy nie jest dopasowana (na przykład /^$/
+    dla regexpu dopasowywanego do nigdy-nie-pustego stringu). To jest brzydki
+    workaround.
+  - dobrze by było, gdyby regexpy były kompilowane raz, przy ustawieniu
+    zmiennej. Nie wiem jednak, czy jest w ogóle możliwe przechowywanie
+    globalnej zmiennej w skrypcie w ekg2.
+
+* refactoring metod notify* Aktualnie jest w nich straszny bałagan.
