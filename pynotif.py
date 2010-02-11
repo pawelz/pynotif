@@ -190,7 +190,6 @@ def notifyMessage(session, uid, type, text, stime, ignore_level):
         user = "Empty"
     if user == None:
         user = "Empty"
-    t = time.strftime("%H:%M:%S", time.localtime(stime))
     if user == "Empty" and ekg.config["notify:message_notify_unknown"] == "0":
         return 1
     if user == "Empty":
@@ -198,9 +197,11 @@ def notifyMessage(session, uid, type, text, stime, ignore_level):
     else:
         user = user.nickname
     try:
-        title = t + " " + user
+        title = user
     except KeyError:
-        title = t + " " + uid
+        title = uid
+    if (ekg.config["notify:show_timestamps"] == "1"):
+        title = time.strftime("%H:%M:%S", time.localtime(stime)) + " " + title
     text = removeTextFormatting(text)
     text = parseMeCommand(text, user)
     if len(text) > 200:
@@ -258,6 +259,7 @@ ekg.variable_add("notify:icon_msg", "dialog-warning")
 ekg.variable_add("notify:message_timeout", "3500", timeCheck)
 ekg.variable_add("notify:message_notify", "1")
 ekg.variable_add("notify:message_notify_unknown", "1")
+ekg.variable_add("notify:show_timestamps", "1")
 ekg.variable_add("notify:status_timeout", "3500", timeCheck)
 ekg.variable_add("notify:status_notify", "1")
 ekg.variable_add("notify:catch_url", "1")

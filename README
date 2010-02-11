@@ -44,6 +44,9 @@
 
    * notify:message_notify_unknown = "1"
    * notify:message_timeout = "3500"
+   * notify:show_timestamps = "1"
+     - set "0" to disable timestamps in message notifications.
+
    * notify:status_notify = "0"
      - set "1" to enable status change notifications.
 
